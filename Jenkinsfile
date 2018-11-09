@@ -2,14 +2,28 @@ pipeline {
   agent any
   stages {
     stage('Build') {
-      agent {
-        docker {
-          image 'feabhas/gcc-arm-scons-alpine'
-        }
+      parallel {
+        stage('gcc-arm-5.4') {
+          agent {
+            docker {
+              image 'feabhas/gcc-arm-scons-alpine'
+            }
 
-      }
-      steps {
-        sh 'cd  c-501 && scons'
+          }
+          steps {
+            sh 'cd  c-501 && scons'
+          }
+        }
+        stage('gcc-arm-6.5') {
+          steps {
+            sleep 1
+          }
+        }
+        stage('gcc-arm-7.2') {
+          steps {
+            sleep 1
+          }
+        }
       }
     }
     stage('Static Analysis') {
