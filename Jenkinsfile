@@ -27,8 +27,15 @@ pipeline {
       }
     }
     stage('Metrics') {
+      agent {
+        docker {
+          image 'feabhas/alpine-lizard'
+        }
+
+      }
       steps {
         sleep 1
+        sh 'lizard'
       }
     }
     stage('UT') {
