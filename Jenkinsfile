@@ -9,8 +9,7 @@ pipeline {
 
       }
       steps {
-        sh '''cd  c-501
-scons'''
+        sh 'cd  c-501 && scons'
       }
     }
   }
