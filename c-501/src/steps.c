@@ -130,9 +130,9 @@ void complete(const struct Config * const config)
 }
 
 
-void perform_step(Step s, const struct Config * const config)
+void perform_step(Step step, const struct Config * const config)
 {
-  switch(s)
+  switch(step)
   {
   case EMPTY:
     empty(config);
@@ -166,8 +166,8 @@ void perform_step(Step s, const struct Config * const config)
     complete(config);
     break;
 
-  default:
-    break;
+  // default:
+  //   break;
   }
 }
 

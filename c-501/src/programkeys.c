@@ -76,7 +76,7 @@ int programkeys_get(void)
   gpio_clear_bit(PORT_D, LATCH);
   while(gpio_is_set(PORT_D, ACCEPT))
   {
-    // wait...
+    ; // wait...
   }
 
   return val;

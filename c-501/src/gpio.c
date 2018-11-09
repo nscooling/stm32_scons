@@ -44,7 +44,7 @@ typedef enum
 
 static inline uint32_t get_port_addr(Port port)
 {
-  return (GPIO_BASE_ADDR + (port * 0x400));
+  return GPIO_BASE_ADDR + (port * 0x400);
 }
 
 
@@ -56,27 +56,27 @@ static inline uint32_t get_reg_addr(Port port, GPIO_register reg)
 
 void gpio_init(Port port)
 {
-  AHB1_enable_device(port);
+  AHB1_enable_device((AHB1_Device)port);
 }
 
 
-void gpio_set_as_output(Port port, Pin_number n)
+void gpio_set_as_output(Port port, Pin_number num)
 {
   volatile uint32_t * const pMODE = (uint32_t *)get_reg_addr(port, MODE);
-  *pMODE |= (0x01 << (n * 2));
+  *pMODE |= (0x01 << (num * 2));
 }
 
 
-void gpio_set_as_input(Port port, Pin_number n)
+void gpio_set_as_input(Port port, Pin_number num)
 {
   volatile uint32_t * const pMODE = (uint32_t *)get_reg_addr(port, MODE);
-  *pMODE &= ~(0x03 << (n * 2));
+  *pMODE &= ~(0x03 << (num * 2));
 }
 
 
-void gpio_set_bit(Port port, Pin_number n)
+void gpio_set_bit(Port port, Pin_number num)
 {
-  gpio_set(port, bit(n));
+  gpio_set(port, bit(num));
 }
 
 
@@ -87,9 +87,9 @@ void gpio_set(Port port, bit_mask bits)
 }
 
 
-void gpio_clear_bit(Port port, Pin_number n)
+void gpio_clear_bit(Port port, Pin_number num)
 {
-  gpio_clear(port, bit(n));
+  gpio_clear(port, bit(num));
 }
 
 
@@ -100,9 +100,9 @@ void gpio_clear(Port port, bit_mask bits)
 }
 
 
-bool gpio_is_set(Port port, Pin_number n)
+bool gpio_is_set(Port port, Pin_number num)
 {
   volatile uint32_t * const pIDR = (uint32_t *)get_reg_addr(port, IDR);
-  return is_set(*pIDR, n);
+  return is_set(*pIDR, num);
 }
 
