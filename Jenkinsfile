@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'feabhas/gcc7-arm-scons-alpine'
+      image 'feabhas/gcc-arm-scons-alpine'
     }
 
   }
