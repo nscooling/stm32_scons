@@ -12,5 +12,10 @@ pipeline {
         sh 'cd  c-501 && scons'
       }
     }
+    stage('Static Analysis') {
+      steps {
+        sleep 1
+      }
+    }
   }
 }
