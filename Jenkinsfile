@@ -14,7 +14,7 @@ cd  c-501
 pwd
 ls
 echo $PATH
-ls /home'''
+ls /home/dev'''
       }
     }
   }
