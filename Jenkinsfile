@@ -10,7 +10,9 @@ pipeline {
       }
       steps {
         sh '''cd  c-501
-pwd'''
+pwd
+ls
+ls /home/dev/'''
       }
     }
   }
