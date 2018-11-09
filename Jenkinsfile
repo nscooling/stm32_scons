@@ -13,6 +13,40 @@ pipeline {
       }
     }
     stage('Static Analysis') {
+      parallel {
+        stage('cppcheck') {
+          steps {
+            sleep 1
+          }
+        }
+        stage('OCLint') {
+          steps {
+            sleep 1
+          }
+        }
+      }
+    }
+    stage('Metrics') {
+      steps {
+        sleep 1
+      }
+    }
+    stage('UT') {
+      steps {
+        sleep 1
+      }
+    }
+    stage('IT') {
+      steps {
+        sleep 1
+      }
+    }
+    stage('ST-simulation') {
+      steps {
+        sleep 1
+      }
+    }
+    stage('ST-hardware') {
       steps {
         sleep 1
       }
