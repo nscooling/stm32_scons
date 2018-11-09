@@ -36,7 +36,7 @@ pipeline {
 
           }
           steps {
-            sh 'oclint */*.c -- -c -I Drivers/'
+            sh 'cd c-501 && oclint */*.c -- -c -I Drivers/'
           }
         }
         stage('cppcheck') {
