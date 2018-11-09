@@ -12,7 +12,7 @@ pipeline {
         sh '''cd  c-501
 pwd
 ls
-ls /home/dev/'''
+ls /home/dev/'''
       }
     }
   }
