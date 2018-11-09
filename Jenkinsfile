@@ -28,13 +28,18 @@ pipeline {
     }
     stage('Static Analysis') {
       parallel {
-        stage('cppcheck') {
+        stage('OClint') {
+          agent {
+            docker {
+              image 'feabhas/oclint-0.13'
+            }
+
+          }
           steps {
-            sleep 1
             sh 'oclint */*.c -- -c -I Drivers/'
           }
         }
-        stage('OCLint') {
+        stage('cppcheck') {
           steps {
             sleep 1
           }
@@ -49,8 +54,7 @@ pipeline {
 
       }
       steps {
-        sleep 1
-        sh 'lizard'
+        sh 'lizard -C 50'
       }
     }
     stage('UT') {
