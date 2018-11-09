@@ -9,12 +9,8 @@ pipeline {
 
       }
       steps {
-        sh '''ls
-cd  c-501
-pwd
-ls
-echo $PATH
-ls /home/dev'''
+        sh '''cd  c-501
+scans'''
       }
     }
   }
