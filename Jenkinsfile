@@ -31,6 +31,7 @@ pipeline {
         stage('cppcheck') {
           steps {
             sleep 1
+            sh 'oclint */*.c -- -c -I Drivers/'
           }
         }
         stage('OCLint') {
