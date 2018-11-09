@@ -9,10 +9,12 @@ pipeline {
 
       }
       steps {
-        sh '''cd  c-501
+        sh '''ls
+cd  c-501
 pwd
 ls
-echo $PATH'''
+echo $PATH
+ls /home'''
       }
     }
   }
