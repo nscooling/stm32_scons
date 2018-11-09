@@ -22,9 +22,9 @@
 
 #define array_sizeof(arr) (sizeof(arr) / sizeof(arr[0]))
 
-static void wash_programme(Step programme[], size_t sz, const struct Config * const config)
+static void wash_programme(Step programme[], size_t size, const struct Config * const config)
 {
-  for(unsigned int i = 0; i < sz; ++i)
+  for(unsigned int i = 0; i < size; ++i)
   {
     perform_step(programme[i], config);
   }
@@ -37,7 +37,20 @@ static void wash_programme(Step programme[], size_t sz, const struct Config * co
 
 void white_wash(void)
 {
-  static Step cycle[] = { FILL, HEAT, WASH, EMPTY, FILL, HEAT, EMPTY, RINSE, EMPTY, SPIN, DRY, COMPLETE };
+  static Step cycle[] = { 
+    FILL, 
+    HEAT, 
+    WASH, 
+    EMPTY, 
+    FILL, 
+    HEAT, 
+    EMPTY, 
+    RINSE, 
+    EMPTY, 
+    SPIN, 
+    DRY, 
+    COMPLETE 
+  };
 
   static const struct Config config =
   {

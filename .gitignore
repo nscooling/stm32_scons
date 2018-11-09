@@ -1,0 +1,3 @@
+*.d
+.sconsign.dblite
+c-501/build/
