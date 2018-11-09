@@ -1,0 +1,62 @@
+FEABHOS INSTALLATION INSTRUCTIONS
+=================================
+
+FeabhOS is a Operating System Abstraction Layer (OSAL) designed to give a common API for teaching core operating system, and real-time programming, concepts.  As such, FeabhOS is not designed to be an all-encompasing OSAL, but it does contain enough elements to be practical and useful in production code.
+
+
+File Organisation
+-----------------
+
+FeabhOS is structured as follows:
+
+feabhOS
+-- C              These folders contain the C API
+   -- common      User constructs
+      -- inc      Header files
+
+   -- <PLATFORM>  Platform-specific implementation (currently Win32 and FreeRTOS)
+      -- inc	  OS-specific definitions
+      -- src      OS-specific implementations
+
+-- C++		  These folders contain the C++ API
+   -- inc         Header files (and template classes)
+   -- src         Class implementations
+
+
+NOTE:  The C++ implementation is built on top of the C API; so 
+       the C API must be included even in a pure C++ project.
+
+
+Installing FeabhOS
+------------------
+
+The following steps must be performed to use FeabhOS in your project
+
+********************************************************************
+NOTE:
+    FEABHOS DOES NOT INCLUDE THE UNDERLYING OPERATING
+    SYSTEM.  YOU MUST HAVE THE APPROPRIATE OS INSTALLED
+    IN YOUR PROJECT BEFORE ADDING FEABHOS.
+
+*********************************************************************
+
+1.  Set up additional include paths.
+    For C projects:
+        feabhOS\C\common\inc
+        feabhOS\C\<PLATFORM>\inc
+       
+    For C++ projects you must also add:
+        feabhOS\C++\inc
+
+
+2.  Add the feabhOS source files to your project.
+    For C projects:
+        feabhOS\C\<PLATFORM>\src\*.c  [REQUIRED]
+        feabhOS\C\common\inc\*.h      [OPTIONAL]
+
+    For C++ project you must add the following files:
+        feabhOS\C++\src\*.cpp         [REQUIRED]
+        feabhOS\C++\inc\*.h           [OPTIONAL]
+
+
+3.  Rebuild your system.

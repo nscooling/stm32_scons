@@ -1,0 +1,43 @@
+Import('env')
+Import('sources')
+Import('proj_name')
+Import('vdir')
+program_sources = Glob('#/src/*.c')
+
+
+# build everything
+elf = env.Program(
+    target = proj_name,
+    source = program_sources + sources,
+)
+
+# # binary file builder
+# # Invoking: Cross ARM GNU Create Flash Image
+# def arm_generator(source, target, env, for_signature):
+#     return '$OBJCOPY -O ihex %s %s'%(source[0], target[0])
+# env.Append(BUILDERS = {
+#     'Objcopy': Builder(
+#         generator=arm_generator,
+#         suffix='.hex',
+#         src_suffix='.elf'
+#     )
+# })
+#
+# # file size builder
+# # Invoking: Cross ARM GNU Print Size
+# def arm_size_generator(source, target, env, for_signature):
+#     return '$SIZE --format=berkeley %s'%(source[0])
+# env.Append(BUILDERS = {
+#     'Size': Builder(
+#         generator=arm_size_generator,
+#         src_suffix='.elf'
+#     )
+# })
+#
+# env.Objcopy(prg)
+# env.Size(prg)
+
+hex=env.Command(proj_name+".hex",elf,"arm-none-eabi-objcopy -O ihex "+vdir+proj_name+".elf "+vdir+proj_name+".hex")
+bin=env.Command(proj_name+".bin",elf,"arm-none-eabi-objcopy -O binary "+vdir+proj_name+".elf "+vdir+proj_name+".bin")
+lst=env.Command(proj_name+".lst",elf,"arm-none-eabi-objdump -h -S "+vdir+proj_name+".elf > "+vdir+proj_name+".lst")
+size=env.Command(proj_name+".size",elf,"arm-none-eabi-size --format=berkeley "+vdir+proj_name+".elf | tee "+vdir+proj_name+".size")

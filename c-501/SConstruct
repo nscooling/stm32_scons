@@ -1,0 +1,161 @@
+# gnu arm toolchain must be already in system path
+
+Help("""
+Type: 'scons' to build the source files in the src/ directory,
+      'scons --rtos-build' to build src/ linking in feabbOS and setting correct compiler flags.
+      'scons -c' to clean (combined with the above flags)
+""")
+
+
+# build with `scons --rtos-build` for feabhOS.
+AddOption(
+    '--rtos-build',
+    dest='rtos',
+    action='store_true',
+    help='rtos build with -DRTOS preprocessor directive required for feabhOS',
+    default=False)
+
+proj_name = 'C-501'     # executable name
+vdir = 'build/debug/'   # placement for all build files
+
+import os
+env = Environment(ENV = os.environ)
+
+env.Replace(AS="arm-none-eabi-as")
+env.Replace(AR="arm-none-eabi-ar")
+env.Replace(CC="arm-none-eabi-gcc")
+env.Replace(CXX="arm-none-eabi-g++")
+env.Replace(LINK="arm-none-eabi-g++")                # predefined is 'arm-none-eabi-gcc'
+env.Replace(OBJCOPY="arm-none-eabi-objcopy")
+env.Replace(SIZE="arm-none-eabi-size")
+env.Replace(PROGSUFFIX=".elf")
+env.Replace(RANLIB="arm-none-eabi-ranlib")
+
+# include locations
+system_includes = [
+    '#system/include',
+    '#system/include/arm',
+    '#system/include/cmsis',
+    '#system/include/cortexm',
+    '#system/include/diag',
+    '#system/include/stm32f4xx',
+    ]
+
+middleware_include = [
+    '#Middleware/feabhos/C/common/inc',
+    '#Middleware/feabhos/C/FreeRTOS/inc',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/CMSIS_RTOS',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/include',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/portable/GCC/ARM_CM3',
+    ]
+
+env['CPPPATH'] = [
+    '#Drivers',
+    ] + system_includes + middleware_include
+
+# uC specific compiler flags
+cortex_m4_flags = [
+    '-mcpu=cortex-m4',
+    '-mthumb',
+    '-mfloat-abi=soft',
+ #   '-mfpu=fpv4-sp-d16',
+    ]
+
+# defines
+env.Append(CPPDEFINES = [
+    'DEBUG',
+    'OS_USE_SEMIHOSTING',
+    'OS_USE_TRACE_SEMIHOSTING_STDOUT',
+    'STM32F407xx',
+    'TRACE',
+    'OS_USE_TRACE_SEMIHOSTING_DEBUG',
+])
+
+if GetOption('rtos'):
+    env.Append(CPPDEFINES = ['RTOS'])
+
+# for C
+env.Append(CFLAGS = [
+    '-std=gnu99',
+])
+
+# general C and C++ flags
+env.Append(CCFLAGS = [
+    '-Og',
+    '-fmessage-length=0',
+    '-fsigned-char',
+    '-ffunction-sections',
+    '-fdata-sections',
+    '-Wall',
+    '-Wextra',
+    '-g3',
+    '-MMD',
+    '-MP'] + cortex_m4_flags)
+
+
+
+# linker flags
+env.Append(LINKFLAGS = cortex_m4_flags + [
+    '-Tldscripts/libs.ld',
+    '-Tldscripts/mem.ld',
+    '-Tldscripts/sections.ld',
+    '-nostartfiles',
+    '-Xlinker',
+    '--gc-sections',
+    '-u _printf_float',
+    '-u _scanf_float',
+    '-Wl,-Map,"%s.map"'%(vdir+proj_name),   # put map file in build directory
+    ])
+
+# support files (possibly can be done as LIB)
+system_sources = [
+        '#system/src/cmsis/system_stm32f4xx.c',
+        '#system/src/cmsis/vectors_stm32f4xx.c',
+        '#system/src/cortexm/_initialize_hardware.c',
+        '#system/src/cortexm/_reset_hardware.c',
+        '#system/src/cortexm/exception_handlers.c',
+        '#system/src/diag/Trace.c',
+        '#system/src/diag/trace_impl.c',
+        '#system/src/newlib/__dso_handle.c',
+        '#system/src/newlib/_cxx.cpp',
+        '#system/src/newlib/_exit.c',
+        '#system/src/newlib/_sbrk.c',
+        '#system/src/newlib/_startup.c',
+        '#system/src/newlib/_syscalls.c',
+        '#system/src/newlib/assert.c',
+    ]
+
+middleware_sources = [
+    '#Middleware/feabhos/C/FreeRTOS/src/feabhOS_condition.c',
+    '#Middleware/feabhos/C/FreeRTOS/src/feabhOS_interrupts.c',
+    '#Middleware/feabhos/C/FreeRTOS/src/feabhOS_memory.c',
+    '#Middleware/feabhos/C/FreeRTOS/src/feabhOS_mutex.c',
+    '#Middleware/feabhos/C/FreeRTOS/src/feabhOS_queue.c',
+    '#Middleware/feabhos/C/FreeRTOS/src/feabhOS_scheduler.c',
+    '#Middleware/feabhos/C/FreeRTOS/src/feabhOS_semaphore.c',
+    '#Middleware/feabhos/C/FreeRTOS/src/feabhOS_signal.c',
+    '#Middleware/feabhos/C/FreeRTOS/src/feabhOS_task.c',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/croutine.c',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/event_groups.c',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/list.c',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/portable/MemMang/heap_3.c',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/queue.c',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/tasks.c',
+    '#Middleware/freertos_cortex_m4/FreeRTOS/Source/timers.c',
+    ]
+
+# driver_sources = [
+#         '#Drivers/_write.c',
+#         '#Drivers/timer.c',
+#         '#Drivers/usart3_remap.c',
+#     ]
+
+driver_sources =Glob('#Drivers/*.c')
+
+sources = system_sources + driver_sources + middleware_sources
+
+
+# will create .elf file in build/debug
+SConscript('SConscript', variant_dir=vdir, exports=['env', 'sources', 'proj_name', 'vdir'])
