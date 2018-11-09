@@ -10,7 +10,7 @@ pipeline {
       }
       steps {
         sh '''cd  c-501
-scans'''
+scons'''
       }
     }
   }
