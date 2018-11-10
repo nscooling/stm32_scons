@@ -37,7 +37,7 @@ pipeline {
 
           }
           steps {
-            sh 'cd c-501 && oclint -max-priority-1 0 -max-priority-2 10 -max-priority-3 10 src/*.c -- -c -I Drivers/'
+            sh 'cd c-501 && oclint src/*.c -- -c -I Drivers/ -I system/include/cmsis/ -D STM32F407xx'
           }
         }
         stage('cppcheck') {
