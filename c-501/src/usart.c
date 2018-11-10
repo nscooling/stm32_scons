@@ -160,7 +160,7 @@ void usart_init(USART_config * const config)
 
   // Ensure there's a configuration
   //
-  USART_config *cfg = (config != NULL? config : &default_cfg);
+  USART_config *cfg = config ? config : &default_cfg;
 
   // Set up the data transmission
   // characteristics.
@@ -243,7 +243,7 @@ void usart_send(char val)
 {
   while (status->TXE == 0)
   {
-    // wait...
+    ; // wait...
   }
   write(val);
 }
