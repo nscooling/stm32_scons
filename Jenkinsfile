@@ -14,14 +14,16 @@ pipeline {
             sh 'cd  c-501 && scons'
           }
         }
-        stage('gcc-arm-6.5') {
-          steps {
-            sleep 1
-          }
-        }
         stage('gcc-arm-7.2') {
+          agent {
+            docker {
+              image 'feabhas/gcc7-arm-scons-alpine'
+            }
+
+          }
           steps {
             sleep 1
+            sh 'cd c-501 && scons'
           }
         }
       }
