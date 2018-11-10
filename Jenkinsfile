@@ -23,7 +23,6 @@ pipeline {
           }
           steps {
             sleep 1
-            sh 'cd c-501 && scons'
           }
         }
       }
