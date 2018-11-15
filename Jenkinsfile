@@ -15,6 +15,9 @@ pipeline {
           }
         }
         stage('gcc-arm-7.2') {
+          when {
+            branch 'develop'
+          }
           agent {
             docker {
               image 'feabhas/gcc7-arm-scons-alpine'
@@ -22,7 +25,7 @@ pipeline {
 
           }
           steps {
-            sleep 1
+            sh 'cd  c-501 && scons'
           }
         }
       }
