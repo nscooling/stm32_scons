@@ -15,6 +15,9 @@ pipeline {
           }
         }
         stage('gcc-arm-7.2') {
+          when {
+            branch 'develop'
+          }
           agent {
             docker {
               image 'feabhas/gcc7-arm-scons-alpine'
@@ -22,12 +25,20 @@ pipeline {
 
           }
           steps {
-            sleep 1
+            sh 'cd  c-501 && scons'
           }
         }
       }
     }
     stage('Static Analysis') {
+      when {
+        not {
+          anyOf {
+            branch 'release'
+            branch 'jenkins'
+          }
+        }
+      }
       parallel {
         stage('OClint') {
           agent {
@@ -48,6 +59,11 @@ pipeline {
       }
     }
     stage('Metrics') {
+      when {
+        not {
+          branch 'release'
+        }
+      }
       agent {
         docker {
           image 'feabhas/alpine-lizard'
@@ -60,7 +76,9 @@ pipeline {
     }
     stage('UnitTests') {
       when {
-        branch 'develop'
+        not {
+          branch 'release'
+        }
       }
       steps {
         sleep 1
