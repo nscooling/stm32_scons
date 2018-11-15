@@ -64,6 +64,9 @@ pipeline {
       }
     }
     stage('IT') {
+      when {
+        branch 'release'
+      }
       steps {
         sleep 1
       }
