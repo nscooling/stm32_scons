@@ -69,11 +69,17 @@ pipeline {
       }
     }
     stage('ST-simulation') {
+      when {
+        branch 'release'
+      }
       steps {
         sleep 1
       }
     }
     stage('ST-hardware') {
+      when {
+        branch 'release'
+      }
       steps {
         sleep 1
       }
