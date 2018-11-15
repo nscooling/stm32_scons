@@ -31,6 +31,11 @@ pipeline {
       }
     }
     stage('Static Analysis') {
+      when {
+        not {
+          branch 'release'
+        }
+      }
       parallel {
         stage('OClint') {
           agent {
@@ -51,6 +56,11 @@ pipeline {
       }
     }
     stage('Metrics') {
+      when {
+        not {
+          branch 'release'
+        }
+      }
       agent {
         docker {
           image 'feabhas/alpine-lizard'
@@ -61,12 +71,17 @@ pipeline {
         sh 'lizard -C 50'
       }
     }
-    stage('UT') {
+    stage('UnitTests') {
+      when {
+        not {
+          branch 'release'
+        }
+      }
       steps {
         sleep 1
       }
     }
-    stage('IT') {
+    stage('IntTests') {
       when {
         branch 'release'
       }
@@ -74,7 +89,7 @@ pipeline {
         sleep 1
       }
     }
-    stage('ST-simulation') {
+    stage('SysTest-sim') {
       when {
         branch 'release'
       }
@@ -82,7 +97,7 @@ pipeline {
         sleep 1
       }
     }
-    stage('ST-hardware') {
+    stage('SysTest-hw') {
       when {
         branch 'release'
       }
