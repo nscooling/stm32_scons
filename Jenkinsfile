@@ -28,11 +28,6 @@ pipeline {
       }
     }
     stage('Static Analysis') {
-      when {
-        not {
-          branch 'release'
-        }
-      }
       parallel {
         stage('OClint') {
           agent {
@@ -53,11 +48,6 @@ pipeline {
       }
     }
     stage('Metrics') {
-      when {
-        not {
-          branch 'release'
-        }
-      }
       agent {
         docker {
           image 'feabhas/alpine-lizard'
@@ -70,9 +60,7 @@ pipeline {
     }
     stage('UnitTests') {
       when {
-        not {
-          branch 'release'
-        }
+        branch 'develop'
       }
       steps {
         sleep 1
